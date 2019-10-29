@@ -1,4 +1,16 @@
 #include "sort.h"
+#include <stdlib.h>
+
+size_t print_dlistint(const listint_t *h)
+{
+	size_t size = 0;
+
+	for (; h->next; h = h->next, size++)
+		printf("%d, ", h->n);
+	printf("%d\n", h->n);
+	return (size);
+}
+
 
 /**
  * swap - swaps two nodes in a linked list
@@ -34,24 +46,31 @@ void cocktail_sort_list(listint_t **list)
     {
         swapped = 0;
 
-        for (;copy->next; copy = copy->next)
+        while (copy)
         {
-            if (copy->n > copy->next->n)
+            if (copy->next &&copy->n > copy->next->n)
             {
                 swap(list, copy, copy->next);
                 swapped = 1;
+		print_dlistint(*list);
             }
+	    else if (copy->next && copy->n < copy->next->n)
+		    copy = copy->next;
+	    else
+		    break;
         }
-        copy = copy->prev;
-
-        for (;copy->prev; copy = copy->prev)
+        while (copy && copy->prev)
         {
-            if (copy->n < copy->prev->n)
-            {
-                swap(list, copy, copy->prev);
-                swapped = 1;
-            }
-        }
-        copy = copy->next;
+		if (copy->n < copy->prev->n)
+            	{
+                	swap(list, copy->prev, copy);
+                	swapped = 1;
+			print_dlistint(*list);
+            	}
+		else if (copy->prev && copy->n > copy->prev->n)
+			copy = copy->prev;
+		else
+			break;
+	}
     }
 }
